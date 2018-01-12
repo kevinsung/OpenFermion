@@ -1,6 +1,5 @@
-===========
-OpenFermion
-===========
+.. image:: https://github.com/quantumlib/openfermion/blob/master/docs/logo.png
+   :align: left
 
 .. image:: https://travis-ci.org/quantumlib/OpenFermion.svg?branch=master
     :target: https://travis-ci.org/quantumlib/OpenFermion
