@@ -41,7 +41,8 @@ from ._sparse_tools import (expectation,
                             jw_number_restrict_state,
                             jw_slater_determinant,
                             qubit_operator_sparse,
-                            sparse_eigenspectrum)
+                            sparse_eigenspectrum,
+                            variance)
 
 from ._trotter_error import error_bound, error_operator
 
