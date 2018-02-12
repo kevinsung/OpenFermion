@@ -40,6 +40,8 @@ from ._sparse_tools import (expectation,
                             jw_number_restrict_operator,
                             jw_number_restrict_state,
                             jw_slater_determinant,
+                            jw_sz_restrict_operator,
+                            jw_sz_restrict_state,
                             qubit_operator_sparse,
                             sparse_eigenspectrum,
                             variance)
