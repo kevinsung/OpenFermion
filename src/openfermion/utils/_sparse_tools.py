@@ -29,8 +29,9 @@ from openfermion.hamiltonians import up_index, down_index, number_operator
 from openfermion.ops import (FermionOperator, hermitian_conjugated,
                              normal_ordered,
                              QuadraticHamiltonian, QubitOperator)
-from openfermion.utils import (commutator, fourier_transform,
-                               gaussian_state_preparation_circuit, Grid)
+from openfermion.utils import (commutator, fourier_transform, Grid,
+                               gaussian_state_preparation_circuit,
+                               slater_determinant_preparation_circuit)
 from openfermion.hamiltonians._jellium import (momentum_vector,
                                                position_vector,
                                                grid_indices)
@@ -207,28 +208,27 @@ def qubit_operator_sparse(qubit_operator, n_qubits=None):
     return sparse_operator
 
 
-def jw_slater_determinant(occupied_orbitals, n_orbitals):
-    """Function to produce a Slater determinant in JW representation.
+def computational_basis_vector(one_qubits, n_qubits):
+    """Function to produce a computational basis vector.
 
     Args:
-        occupied_orbitals(list): A list of integers representing the indices
-            of the occupied orbitals in the desired Slater determinant
-        n_orbitals(int): The total number of orbitals
+        one_qubits(list): A list of integers representing the indices
+            of the qubits to set to one (the rest are set to zero)
+        n_qubits(int): The total number of qubits
 
     Returns:
-        slater_determinant(sparse): The JW-encoded Slater determinant as a
-            sparse matrix
+        basis_vector(sparse): The computational basis vector as a sparse matrix
     """
-    one_index = sum([2 ** (n_orbitals - 1 - i) for i in occupied_orbitals])
-    slater_determinant = scipy.sparse.csc_matrix(([1.], ([one_index], [0])),
-                                                 shape=(2 ** n_orbitals, 1),
-                                                 dtype=float)
-    return slater_determinant
+    one_index = sum([2 ** (n_qubits - 1 - i) for i in one_qubits])
+    basis_vector = scipy.sparse.csc_matrix(([1.], ([one_index], [0])),
+                                           shape=(2 ** n_qubits, 1),
+                                           dtype=float)
+    return basis_vector
 
 
 def jw_hartree_fock_state(n_electrons, n_orbitals):
     """Function to produce Hartree-Fock state in JW representation."""
-    hartree_fock_state = jw_slater_determinant(range(n_electrons), n_orbitals)
+    hartree_fock_state = computational_basis_vector(range(n_electrons), n_orbitals)
     return hartree_fock_state
 
 
@@ -564,7 +564,7 @@ def jw_get_gaussian_state(quadratic_hamiltonian, occupied_orbitals=None):
         quadratic_hamiltonian, occupied_orbitals)
 
     # Initialize the starting state
-    state = jw_slater_determinant(start_orbitals, n_qubits)
+    state = computational_basis_vector(start_orbitals, n_qubits)
 
     # Apply the circuit
     if not quadratic_hamiltonian.conserves_particle_number:
@@ -580,6 +580,45 @@ def jw_get_gaussian_state(quadratic_hamiltonian, occupied_orbitals=None):
                     i, j, theta, phi, n_qubits).dot(state)
 
     return energy, state
+
+
+def jw_slater_determinant(slater_determinant_matrix):
+    """Obtain a Slater determinant.
+
+    The input is an :math:`N_f \\times N` matrix :math:`Q` with orthonormal
+    rows. Such a matrix describes the Slater determinant
+
+    .. math::
+
+        b^\dagger_1 \cdots b^\dagger_{N_f} \lvert \\text{vac} \\rangle,
+
+    where
+
+    .. math::
+
+        b^\dagger_j = \sum_{k = 1}^N Q_{jk} a^\dagger_k.
+
+    Args:
+        slater_determinant_matrix: The matrix :math:`Q` which describes the
+            Slater determinant to be prepared.
+    Returns:
+        The Slater determinant as a sparse matrix.
+    """
+    circuit_description = slater_determinant_preparation_circuit(
+            slater_determinant_matrix)
+    start_orbitals = len(slater_determinant_matrix)
+
+    # Initialize the starting state
+    state = computational_basis_vector(start_orbitals, n_qubits)
+
+    # Apply the circuit
+    for parallel_ops in circuit_description:
+        for op in parallel_ops:
+            i, j, theta, phi = op
+            state = jw_sparse_givens_rotation(
+                i, j, theta, phi, n_qubits).dot(state)
+
+    return state
 
 
 def jw_sparse_givens_rotation(i, j, theta, phi, n_qubits):
