@@ -30,10 +30,10 @@ def normal_ordered_term(term, coefficient):
             operator acts, starting from zero. The second element of each
             tuple is an integer, either 1 or 0, indicating whether creation
             or annihilation acts on that mode.
-        coefficient: The coefficient of the term.
+        coefficient(complex or float): The coefficient of the term.
 
     Returns:
-        ordered_term (FermionOperator): The normal ordered form of the input.
+        ordered_term(FermionOperator): The normal ordered form of the input.
             Note that this might have more terms.
 
     In our convention, normal ordering implies terms are ordered
