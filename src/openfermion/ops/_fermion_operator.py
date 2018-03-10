@@ -25,8 +25,8 @@ def normal_ordered_term(term, coefficient):
     """Return a normal ordered FermionOperator corresponding to single term.
 
     Args:
-        term: A tuple of tuples. The first element of each tuple is
-            an integer indicating the mode on which a fermion ladder
+        term(list or tuple): A sequence of tuples. The first element of each
+            tuple is an integer indicating the mode on which a fermion ladder
             operator acts, starting from zero. The second element of each
             tuple is an integer, either 1 or 0, indicating whether creation
             or annihilation acts on that mode.
@@ -56,7 +56,7 @@ def normal_ordered_term(term, coefficient):
             left_operator = term[j - 1]
 
             # Swap operators if raising on right and lowering on left.
-            if right_operator[1] and not left_operator[1]:
+            if right_operator[1] == 1 and left_operator[1] == 0:
                 term[j - 1] = right_operator
                 term[j] = left_operator
                 coefficient *= -1
@@ -64,11 +64,10 @@ def normal_ordered_term(term, coefficient):
                 # Replace a a^\dagger with 1 - a^\dagger a
                 # if indices are the same.
                 if right_operator[0] == left_operator[0]:
-                    new_term = term[:(j - 1)] + term[(j + 1)::]
+                    new_term = term[:(j - 1)] + term[(j + 1):]
 
                     # Recursively add the processed new term.
-                    ordered_term += normal_ordered_term(
-                        tuple(new_term), -coefficient)
+                    ordered_term += normal_ordered_term(new_term, -coefficient)
 
             # Handle case when operator type is the same.
             elif right_operator[1] == left_operator[1]:
