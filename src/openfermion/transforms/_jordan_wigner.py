@@ -58,7 +58,9 @@ def jordan_wigner(operator):
                 pauli_y_component = QubitOperator(
                     z_factors + ((ladder_operator[0], 'Y'),), 0.5j)
             transformed_term *= pauli_x_component + pauli_y_component
+
         transformed_operator += transformed_term
+
     return transformed_operator
 
 
