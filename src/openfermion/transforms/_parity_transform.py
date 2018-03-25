@@ -45,10 +45,6 @@ def parity_transform(operator, n_qubits=None):
     def update_set(index):
         return update_set_parity(index, n_qubits)
 
-    # Compute transformed operator.
-    def update_set(index):
-        return _update_set(index, n_qubits)
-
     return prefix_sum_transform(operator, n_qubits,
                                 occupation_set_parity,
                                 parity_set_parity,

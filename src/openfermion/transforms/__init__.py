@@ -34,6 +34,7 @@ from ._conversion import (get_boson_operator,
                           get_sparse_operator,
                           get_quad_operator)
 from ._jordan_wigner import jordan_wigner
+from ._parity_transform import parity_transform
 from ._prefix_sums import (occupation_set_bravyi_kitaev,
                            parity_set_bravyi_kitaev,
                            update_set_bravyi_kitaev,
@@ -46,7 +47,3 @@ from ._qubit_operator_transforms import (project_onto_sector,
                                          rotate_qubit_by_pauli)
 from ._reverse_jordan_wigner import reverse_jordan_wigner
 from ._verstraete_cirac import verstraete_cirac_2d_square
-from ._weyl_ordering import (symmetric_ordering,
-                             weyl_polynomial_quantization)
-from ._remove_symmetry_qubits import (symmetry_conserving_bravyi_kitaev,
-                                      edit_hamiltonian_for_spin)

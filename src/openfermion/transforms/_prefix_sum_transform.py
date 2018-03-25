@@ -84,7 +84,10 @@ def _transform_ladder_operator(ladder_operator,
 
     update_set_ = update_set(index)
     occupation_set_ = occupation_set(index)
-    parity_set_ = parity_set(index - 1)
+    if index == 0:
+        parity_set_ = set()
+    else:
+        parity_set_ = parity_set(index - 1)
 
     # Initialize the transformed majorana operator (a_p^\dagger + a_p) / 2
     transformed_operator = QubitOperator(

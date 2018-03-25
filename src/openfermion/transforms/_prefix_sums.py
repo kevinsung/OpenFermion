@@ -68,7 +68,7 @@ def parity_set_bravyi_kitaev(index):
 def update_set_parity(index, n_qubits):
     """The bits that need to be updated upon flipping the occupancy
     of a mode."""
-    return range(index, n_qubits)
+    return set(range(index, n_qubits))
 
 
 def occupation_set_parity(index):
