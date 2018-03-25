@@ -14,9 +14,9 @@
 from __future__ import absolute_import
 
 from openfermion.ops import QubitOperator
-from openfermion.utils import inline_sum
-from openfermion.transforms._bravyi_kitaev import inline_product
 from openfermion.transforms._fenwick_tree import FenwickTree
+from openfermion.transforms._prefix_sum_transform import inline_product
+from openfermion.utils import inline_sum
 
 
 def bravyi_kitaev_tree(operator, n_qubits=None):

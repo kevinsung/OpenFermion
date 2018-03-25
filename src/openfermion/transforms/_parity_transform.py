@@ -13,24 +13,15 @@
 """Bravyi-Kitaev transform on fermionic operators."""
 
 from openfermion.ops import QubitOperator
-from openfermion.transforms._prefix_sum_transform import prefix_sum_transform
-from openfermion.transforms._prefix_sums import (
-        occupation_set_bravyi_kitaev,
-        parity_set_bravyi_kitaev,
-        update_set_bravyi_kitaev)
+from openfermion.transforms import (prefix_sum_transform,
+                                    occupation_set_parity,
+                                    parity_set_parity,
+                                    update_set_parity)
 from openfermion.utils import count_qubits
 
 
-def bravyi_kitaev(operator, n_qubits=None):
-    """Apply the Bravyi-Kitaev transform.
-
-    Implementation from arXiv:quant-ph/0003137 and
-    "A New Data Structure for Cumulative Frequency Tables" by Peter M. Fenwick.
-
-    Note that this implementation is equivalent to the one described in
-    arXiv:1208.5986, and is different from the one described in
-    arXiv:1701.07072. The one described in arXiv:1701.07072 is implemented
-    in OpenFermion as `bravyi_kitaev_tree`.
+def parity_transform(operator, n_qubits=None):
+    """Apply the parity transform.
 
     Args:
         operator (openfermion.ops.FermionOperator):
@@ -51,11 +42,14 @@ def bravyi_kitaev(operator, n_qubits=None):
     if n_qubits < count_qubits(operator):
         raise ValueError('Invalid number of qubits specified.')
 
+    def update_set(index):
+        return update_set_parity(index, n_qubits)
+
     # Compute transformed operator.
     def update_set(index):
-        return update_set_bravyi_kitaev(index, n_qubits)
+        return _update_set(index, n_qubits)
 
     return prefix_sum_transform(operator, n_qubits,
-                                occupation_set_bravyi_kitaev,
-                                parity_set_bravyi_kitaev,
+                                occupation_set_parity,
+                                parity_set_parity,
                                 update_set)

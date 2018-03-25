@@ -34,6 +34,13 @@ from ._conversion import (get_boson_operator,
                           get_sparse_operator,
                           get_quad_operator)
 from ._jordan_wigner import jordan_wigner
+from ._prefix_sums import (occupation_set_bravyi_kitaev,
+                           parity_set_bravyi_kitaev,
+                           update_set_bravyi_kitaev,
+                           occupation_set_parity,
+                           parity_set_parity,
+                           update_set_parity)
+from ._prefix_sum_transform import prefix_sum_transform
 from ._qubit_operator_transforms import (project_onto_sector,
                                          projection_error,
                                          rotate_qubit_by_pauli)
