@@ -503,7 +503,7 @@ class SymbolicOperator(object):
         exponentiated = self.__class__(())
 
         # Handle non-zero exponents.
-        for i in range(exponent):
+        for _ in range(exponent):
             exponentiated *= self
         return exponentiated
 

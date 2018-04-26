@@ -11,9 +11,7 @@
 #   limitations under the License.
 
 """FermionOperator stores a sum of products of fermionic ladder operators."""
-import numpy
 
-from future.utils import iteritems
 from openfermion.ops import SymbolicOperator
 
 
