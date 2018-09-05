@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from openfermion.transforms._prefix_sums import parity_set_bravyi_kitaev
+from openfermion.transforms._bravyi_kitaev import parity_set_bravyi_kitaev
 from openfermion.transforms._fenwick_tree import FenwickNode, FenwickTree
 
 

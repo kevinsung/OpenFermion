@@ -12,11 +12,7 @@
 
 """Bravyi-Kitaev transform on fermionic operators."""
 
-from openfermion.ops import QubitOperator
-from openfermion.transforms import (prefix_sum_transform,
-                                    occupation_set_parity,
-                                    parity_set_parity,
-                                    update_set_parity)
+from openfermion.transforms._prefix_sum_transform import prefix_sum_transform
 from openfermion.utils import count_qubits
 
 
@@ -49,3 +45,22 @@ def parity_transform(operator, n_qubits=None):
                                 occupation_set_parity,
                                 parity_set_parity,
                                 update_set)
+
+
+def update_set_parity(index, n_qubits):
+    """The bits that need to be updated upon flipping the occupancy
+    of a mode."""
+    return set(range(index, n_qubits))
+
+
+def occupation_set_parity(index):
+    """The bits whose parity stores the occupation of mode `index`."""
+    if index == 0:
+        return {index}
+    else:
+        return {index, index + 1}
+
+
+def parity_set_parity(index):
+    """The bits whose parity stores the parity of the bits 0 .. `index`."""
+    return {index}

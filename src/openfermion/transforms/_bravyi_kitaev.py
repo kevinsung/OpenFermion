@@ -12,12 +12,7 @@
 
 """Bravyi-Kitaev transform on fermionic operators."""
 
-from openfermion.ops import QubitOperator
 from openfermion.transforms._prefix_sum_transform import prefix_sum_transform
-from openfermion.transforms._prefix_sums import (
-        occupation_set_bravyi_kitaev,
-        parity_set_bravyi_kitaev,
-        update_set_bravyi_kitaev)
 from openfermion.utils import count_qubits
 
 
@@ -59,3 +54,52 @@ def bravyi_kitaev(operator, n_qubits=None):
                                 occupation_set_bravyi_kitaev,
                                 parity_set_bravyi_kitaev,
                                 update_set)
+
+
+def update_set_bravyi_kitaev(index, n_qubits):
+    """The bits that need to be updated upon flipping the occupancy
+    of a mode."""
+    indices = set()
+
+    # For bit manipulation we need to count from 1 rather than 0
+    index += 1
+
+    while index <= n_qubits:
+        indices.add(index - 1)
+        # Add least significant one to index
+        # E.g. 00010100 -> 00011000
+        index += index & -index
+    return indices
+
+
+def occupation_set_bravyi_kitaev(index):
+    """The bits whose parity stores the occupation of mode `index`."""
+    indices = set()
+
+    # For bit manipulation we need to count from 1 rather than 0
+    index += 1
+
+    indices.add(index - 1)
+    parent = index & (index - 1)
+    index -= 1
+    while index != parent:
+        indices.add(index - 1)
+        # Remove least significant one from index
+        # E.g. 00010100 -> 00010000
+        index &= index - 1
+    return indices
+
+
+def parity_set_bravyi_kitaev(index):
+    """The bits whose parity stores the parity of the bits 0 .. `index`."""
+    indices = set()
+
+    # For bit manipulation we need to count from 1 rather than 0
+    index += 1
+
+    while index > 0:
+        indices.add(index - 1)
+        # Remove least significant one from index
+        # E.g. 00010100 -> 00010000
+        index &= index - 1
+    return indices
